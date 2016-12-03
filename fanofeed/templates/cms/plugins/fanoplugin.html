@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load sekizai_tags %}
+{% addtoblock "js" %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("div.fano-news").load('{% url 'fano_parser' %}', 
+          function(response, status, xhr){
+          if (reponse.length == 0){
+            $("div.fano-news").html('<p>{%trans 'Новости с сайта ФАНО не загружены'%}</p>')
+              }})};);
+</script>
+{% endaddtoblock %}
+<div class="fano-news" >
+  <div class='ajax-html-loading'>
+  {% trans "Загрузка..." %}
+  </div>
+</div>
+
+
