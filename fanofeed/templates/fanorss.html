@@ -1,0 +1,7 @@
+{%if objs%}
+<ul class="fano-news">
+{%for item in objs%}
+<li> <a href="{{item.link}}">{{item.title}}</a></li>
+{%endfor%}
+</ul>
+{%endif%}
