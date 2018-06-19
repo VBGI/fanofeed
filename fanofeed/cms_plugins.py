@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class FanoFeedParser(CMSPluginBase):
     model = FanoFeed
-    name = _(u"Новости ФАНО")
+    name = _(u"Новости РАН")
     render_template = "cms/plugins/fanoplugin.html"
     text_enabled = True
     def render(self, context, instance, placeholder):
