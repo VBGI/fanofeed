@@ -10,6 +10,7 @@ from HTMLParser import HTMLParser
 from BeautifulSoup import BeautifulSoup
 import urllib
 
+
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
@@ -19,17 +20,26 @@ class MLStripper(HTMLParser):
     def get_data(self):
         return ''.join(self.fed)
 
+
 def strip_tags(html):
     s = MLStripper()
     s.feed(html)
     return s.get_data()
 
+def return_block(request, objs, pname=''):
+    if objs:
+        return HttpResponse(render_to_string('feeddata.html', {'objs':
+                                                              objs[:FEED_URLS[0][-1]],
+                                                              'parser_name': pname}),
+                           content_type='text/plain')
+    else:
+        return HttpResponse('', content_type='text/plain')
 
-# Parse news once per half-a-day
+
 @cache_page(FEED_URLS[0][3])
 def ras_parser(request):
-    objs = []
     try:
+        objs = []
         data = feedparser.parse(FEED_URLS[0][0])
         for item in data['entries']:
             objs.append({'title': strip_tags(item['title']),
@@ -37,19 +47,23 @@ def ras_parser(request):
                          'link': item['link']})
             objs.sort(key=lambda x: x['published'])
             objs = objs[::-1]
-    except:  # be quiet, if something goes wrong...
-        objs = []  # clear objs in any case...
-    if objs:
-        return HttpResponse(render_to_string('fanorss.html', {'objs':
-                                                              objs[:FEED_URLS[0][-1]]}),
-                           content_type='text/plain')
-    else:
-        return HttpResponse('', content_type='text/plain')
+    except:  # Be quite if something went wrong...
+        objs = []
+    return return_block(request, objs, 'ras_parser')
 
 
 @cache_page(FEED_URLS[1][3])
 def minobr_parser(request):
-    soup = BeautifulSoup(urllib.urlopen(FEED_URLS[1][0]).read())
-    news = soup.find('a', attrs={'class': 'news-list__title'})
-    
-
+    try:
+        objs = []
+        soup = BeautifulSoup(urllib.urlopen(FEED_URLS[1][0]).read())
+        news = soup.find('a', attrs={'class': 'news-list__title'})
+        objs = []
+        for new in news[:FEED_URLS[1][-1]]:
+            objs.append({'title': strip_tags(new.contents),
+                        'published': None,
+                        'link': new['href']
+                        })
+    except: # be quite if something went wrong...
+        objs = []
+    return return_block(request, objs, 'minobr_parser')

@@ -3,7 +3,7 @@
 {% addtoblock "js" %}
 <script type="text/javascript">
     $(document).ready(function(){
-        $("div.fano-news").load('{% url 'fano_parser' %}',
+        $("div.fano-news").load('{% url parser_name %}',
         function(data){ 
         if (data.length == 0){
         $("div.fano-news").html('<p>{%trans 'Не удалось загрузить ленту новостей'%}</p>')}
