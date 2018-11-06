@@ -1,6 +1,0 @@
-{%if objs%}
-{%for item in objs%}
-  <p style="text-align:center"><a href="{{item.link}}">{{item.title|safe}}</a></p>
-  {%if not forloop.last%}<hr>{%endif%}
-{%endfor%}
-{%endif%}
