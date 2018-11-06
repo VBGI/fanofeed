@@ -26,17 +26,15 @@ def strip_tags(html):
     s.feed(html)
     return s.get_data()
 
-def return_block(request, objs, pname=''):
+def return_block(request, objs):
     if objs:
-        return HttpResponse(render_to_string('feeddata.html', {'objs':
-                                                              objs[:FEED_URLS[0][-1]],
-                                                              'parser_name': pname}),
+        return HttpResponse(render_to_string('feeddata.html', {'objs': objs}),
                            content_type='text/plain')
     else:
         return HttpResponse('', content_type='text/plain')
 
 
-@cache_page(FEED_URLS[0][3])
+#@cache_page(FEED_URLS[0][3])
 def ras_parser(request):
     try:
         objs = []
@@ -49,21 +47,19 @@ def ras_parser(request):
             objs = objs[::-1]
     except:  # Be quite if something went wrong...
         objs = []
-    return return_block(request, objs, 'ras_parser')
+    return return_block(request, objs[:FEED_URLS[0][-1]])
 
 
-@cache_page(FEED_URLS[1][3])
+#@cache_page(FEED_URLS[1][3])
 def minobr_parser(request):
-    try:
         objs = []
         soup = BeautifulSoup(urllib.urlopen(FEED_URLS[1][0]).read())
-        news = soup.find('a', attrs={'class': 'news-list__title'})
+        news = soup.findAll('a', attrs={'class': 'news-list__title'})
         objs = []
         for new in news[:FEED_URLS[1][-1]]:
-            objs.append({'title': strip_tags(new.contents),
+            objs.append({'title': new.contents[0],
                         'published': None,
-                        'link': new['href']
+                        'link': 'http://minobrnauki.gov.ru' + new['href']
                         })
-    except: # be quite if something went wrong...
-        objs = []
-    return return_block(request, objs, 'minobr_parser')
+    
+        return return_block(request, objs[:FEED_URLS[1][-1]])

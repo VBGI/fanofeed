@@ -13,6 +13,7 @@ class NewsFeedParser(CMSPluginBase):
     render_template = "cms/plugins/newsfeedplugin.html"
     text_enabled = True
     def render(self, context, instance, placeholder):
+        context.update({'parser_name': 'ras_parser' if instance.name == 'R' else 'minobr_parser'})
         return context
 
 plugin_pool.register_plugin(NewsFeedParser)

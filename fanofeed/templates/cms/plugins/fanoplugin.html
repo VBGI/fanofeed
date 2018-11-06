@@ -3,15 +3,15 @@
 {% addtoblock "js" %}
 <script type="text/javascript">
     $(document).ready(function(){
-        $("div.fano-news_{{parser_name}}").load('{% url parser_name %}' + '?wkdfljkwe',
+        $("div.fano-news").load('{% url 'fano_parser' %}',
         function(data){ 
         if (data.length == 0){
-        $("div.fano-news_{{parser_name}}").html('<p>{%trans 'Не удалось загрузить ленту новостей'%}</p>')}
+        $("div.fano-news").html('<p>{%trans 'Не удалось загрузить ленту новостей'%}</p>')}
         }
         )})
 </script>
 {% endaddtoblock %}
-<div class="fano-news_{{parser_name}}" >
+<div class="fano-news" >
   <div class='ajax-html-loading'>
   {% trans "Загрузка..." %}
   </div>
