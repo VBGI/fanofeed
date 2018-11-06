@@ -34,7 +34,7 @@ def return_block(request, objs):
         return HttpResponse('', content_type='text/plain')
 
 
-#@cache_page(FEED_URLS[0][3])
+@cache_page(FEED_URLS[0][3])
 def ras_parser(request):
     try:
         objs = []
@@ -50,7 +50,7 @@ def ras_parser(request):
     return return_block(request, objs[:FEED_URLS[0][-1]])
 
 
-#@cache_page(FEED_URLS[1][3])
+@cache_page(FEED_URLS[1][3])
 def minobr_parser(request):
         objs = []
         soup = BeautifulSoup(urllib.urlopen(FEED_URLS[1][0]).read())
@@ -61,5 +61,5 @@ def minobr_parser(request):
                         'published': None,
                         'link': 'http://minobrnauki.gov.ru' + new['href']
                         })
-    
+
         return return_block(request, objs[:FEED_URLS[1][-1]])
